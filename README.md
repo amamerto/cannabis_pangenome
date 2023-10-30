@@ -1,1 +1,1 @@
-# cannabinoid_pangenome
+# cannabis_pangenome
