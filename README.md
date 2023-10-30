@@ -1,1 +1,1 @@
-# cannabinoid_cassettes
+# cannabinoid_pangenome
