@@ -1,6 +1,6 @@
 # cannabis_pangenome
 ```
-conda create -c conda-forge -c bioconda -c anaconda -n cassettes pandas>=3.10 svgwrite blast seaborn bedtools mafft fasttree awscli
+conda create -c conda-forge -c bioconda -c anaconda -n cassettes 'pandas>=3.10' svgwrite blast seaborn bedtools mafft fasttree awscli
 ```
 
 ### synthase_cassettes
