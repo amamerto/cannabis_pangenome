@@ -5,5 +5,5 @@ TEMP=${LIST##*/}
 TYPE=${TEMP%%.*}
 
 while read FILE; do
-    sh get.fasta_fromcsv.sh ${FILE} ${TYPE}
+    sh getfasta.from_csv.sh ${FILE} ${TYPE}
 done < ${LIST}
