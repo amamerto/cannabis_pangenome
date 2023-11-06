@@ -37,11 +37,11 @@ def filterLTR(ltr, targets):
     df = pd.read_csv(ltr, sep='\t', header=None)
     df.columns = ['query', 'target', 'pident', 'length', 'mismatch', 'gaps', \
         'qstart', 'qend', 'tstart', 'tend', 'evalue', 'bitscore']
-
+    
     for target in targets:
-        tempdf = df[(df['target'] == target)  & (df['bitscore'] >= bitscore) & (df['query'] == 'LTR08')] #filter by param
+        tempdf = df[(df['target'] == target)  & (df['bitscore'] >= bitscore) & (df['query'] == 'LTR08_09')] #filter by param
         ldf = pd.concat([ldf, tempdf])
-
+    
     # Add type and direction
     ldf['type'] = 'LTR'
     for index, row in ldf.iterrows():
@@ -292,7 +292,7 @@ def main():
 
     sdf = filterSYN(syn)
     targets = list(sdf['target'].unique())
-
+    
     ldf = filterLTR(ltr, targets)
 
     fd, fdf = renameHITS(sdf, ldf, targets)
