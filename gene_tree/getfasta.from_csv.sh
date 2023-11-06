@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILE=$1.softmasked.fasta.gz
+FILE=$1
 NAME=${FILE%%.*}
 TYPE=$2
 
