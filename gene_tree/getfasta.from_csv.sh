@@ -16,7 +16,7 @@ echo "~~~#  GRABBING ${NAME} FILTERED HITS  #~~~"
 aws s3 cp s3://salk-tm-dev/allen_temp/synthase_cassettes/csv_output/${NAME}_filterhits.csv .
 
 echo "~~~#####   MAKING ${NAME} BED   #####~~~"
-python filter_blastn.py ${NAME}_filterhits.csv
+python make.bedfile.py ${NAME}_filterhits.csv
 
 echo "~~~#####   MAKING ${NAME} FASTA   #####~~~"
 bedtools getfasta -name -fi ${NAME}.softmasked.fasta -bed ${NAME}_fullsyn.bed -fo ${NAME}_fullsyn.fasta
