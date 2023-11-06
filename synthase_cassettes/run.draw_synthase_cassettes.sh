@@ -5,5 +5,5 @@ TEMP=${LIST##*/}
 TYPE=${TEMP%%.*}
 
 while read FILE; do
-    sh draw.synthase_cassettes.v4.sh ${FILE} ${TYPE}
+    sh blast.synthase_cassettes.sh ${FILE} ${TYPE}
 done < ${LIST}
