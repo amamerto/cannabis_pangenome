@@ -9,11 +9,11 @@ Output svg and csv files will be uploaded to s3://salk-tm-dev/allen_temp/synthas
 ```
 cd synthase_cassettes
 
-nohup sh run.draw_synthase_cassettes.sh publics.genomes.list &> publics.out &
+nohup sh run.draw_synthase_cassettes.sh ../publics.genomes.list &> publics.out &
 
-nohup sh run.draw_synthase_cassettes.sh scaffolded.genomes.list &> scaffolded.out &
+nohup sh run.draw_synthase_cassettes.sh ../scaffolded.genomes.list &> scaffolded.out &
 
-nohup sh run.draw_synthase_cassettes.sh not_scaffolded.genomes.list &> not_scaffolded.out &
+nohup sh run.draw_synthase_cassettes.sh ../not_scaffolded.genomes.list &> not_scaffolded.out &
 ```
 
 ### copynumber_counting
@@ -22,11 +22,11 @@ Counts will be appended to 'pathway_copynumbers.csv'.
 ```
 cd copynumber_counting
 
-nohup sh run.count_copynumbers.sh publics.genomes.list &> publics.out &
+nohup sh run.count_copynumbers.sh ../publics.genomes.list &> publics.out &
 
-nohup sh run.count_copynumbers.sh scaffolded.genomes.list &> scaffolded.out &
+nohup sh run.count_copynumbers.sh ../scaffolded.genomes.list &> scaffolded.out &
 
-nohup sh run.count_copynumbers.sh not_scaffolded.genomes.list &> not_scaffolded.out &
+nohup sh run.count_copynumbers.sh ../not_scaffolded.genomes.list &> not_scaffolded.out &
 
 python draw.copynumber.py pathway_copynumbers.csv
 ```
@@ -39,11 +39,11 @@ cd gene_tree
 
 mkdir fastas
 
-nohup sh run.getfasta.sh publics.genomes.list &> publics.out &
+nohup sh run.getfasta.sh ../publics.genomes.list &> publics.out &
 
-nohup sh run.getfasta.sh scaffolded.genomes.list &> scaffolded.out &
+nohup sh run.getfasta.sh ../scaffolded.genomes.list &> scaffolded.out &
 
-nohup sh run.getfasta.sh not_scaffolded.genomes.list &> not_scaffolded.out &
+nohup sh run.getfasta.sh ../not_scaffolded.genomes.list &> not_scaffolded.out &
 
 cat fastas/*.fasta > full_synthases.fasta
 
