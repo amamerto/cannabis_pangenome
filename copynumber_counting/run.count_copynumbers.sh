@@ -5,5 +5,5 @@ TEMP=${LIST##*/}
 TYPE=${TEMP%%.*}
 
 while read FILE; do
-    sh blast.copynumber.sh ${FILE} ${TYPE}
+    bash blast.copynumber.sh ${FILE} ${TYPE}
 done < ${LIST}
