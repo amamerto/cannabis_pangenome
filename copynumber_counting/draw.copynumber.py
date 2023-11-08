@@ -6,17 +6,19 @@ import sys
 def main():
     counts = sys.argv[1]
 
-    df = pd.read_csv(counts,
+    temp = pd.read_csv(counts,
                     header=0,
                     names=['genome','THCAS','CBDAS','CBCAS','AAE1','OAC','OLS','PT4']
                     )
-
-    sns.set(rc={'figure.figsize':(15,10)})
-    sns.set(font_scale=1.75)
-    ax = sns.boxplot(data=df)
-    ax.set_xlabel("Gene")
-    ax.set_ylabel("Counts")
-    ax.set_title("Cannabinoid Pathway Counts Per Genome")
+    df = temp[['genome','AAE1','OLS','OAC','PT4','CBDAS','THCAS','CBCAS']]
+    
+    custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+    sns.set(rc={'figure.figsize':(10,10)})
+    sns.set_theme(style="ticks", palette="tab10", font_scale=2, rc=custom_params)
+    ax = sns.boxplot(data=df,orient="h",linewidth=7,width=0.35)
+    ax.set_xlabel("Copy Number")
+    # ax.set_ylabel("Counts")
+    # ax.set_title("Cannabinoid Pathway Counts Per Genome")
     plt.savefig("pathway_copynumber.boxplot.svg", format="svg")
 
 if __name__ == '__main__':
