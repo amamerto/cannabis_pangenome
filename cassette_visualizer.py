@@ -308,6 +308,7 @@ def drawGeneOutline(df,regionStart,regionEnd,scaleFactor,fig):
     strandInfo = {}
     for index, row in df.iterrows():
         strandInfo[df.loc[index, 'gene']] = df.loc[index, 'direction']
+
         geneID = row['gene']
         geneDesc = row['stop']
         scaffoldID = row['chr']
@@ -331,9 +332,9 @@ def drawGeneOutline(df,regionStart,regionEnd,scaleFactor,fig):
             x = scaledGeneStart+15
             y = 37
 
-            if strandInfo[geneID] == '+':
+            if strandInfo[blastID] == '+':
                 points = [(x-0.7, y),(x+scaledGeneLen+0.7, y),(x+scaledGeneLen+7, y+25.5),(x+scaledGeneLen+0.7, y+51),(x-0.7, y+51)]
-            elif strandInfo[geneID] == '-':
+            elif strandInfo[blastID] == '-':
                 points = [(x-5.7, y+25.5),(x-0.7, y),(x+scaledGeneLen+0.7, y),(x+scaledGeneLen+0.7, y+51),(x-0.7, y+51)]
             fig.add(fig.polygon(points, fill='#8C8C8C', stroke='black'))
 
@@ -443,11 +444,9 @@ def main():
             
             chrs = list(df['chr'].unique())
             for c in chrs:
-                name = c.split('.')[0]
                 temp = df[df['chr']==c]
                 temp = temp.sort_values(by=['start'])
-                # drawCassette(temp,args.scale,args.name,c,args.shape,args.pad,None)
-                drawCassette(temp,args.scale,name,c,args.shape,args.pad,None)
+                drawCassette(temp,args.scale,args.name,c,args.shape,args.pad,None)
 
         case 'out':
             df = pd.read_csv(
@@ -477,9 +476,26 @@ def main():
                 args.file,
                 sep='\t',
                 header=None,
-                names=[]
+                names=['chr','source','type','start','stop','score','direction','phase','attribute']
             )
-            print(df)
+            df['gene'] = df['attribute'].str.split(";").str[0].str.split("=").str[1].str.replace('.cds','')
+            df = df.drop(columns=['source','score','phase','attribute'])
+
+            chrs = list(df['chr'].unique())
+            for c in chrs:
+                temp = df[df['chr']==c]
+                temp = temp.sort_values(by=['start'])
+
+                exonDF = temp[temp['type']=='CDS']
+                intronDF = temp[temp['type']=='mRNA']
+                if not exonDF.empty:
+                    if args.shape == 'pentaI':
+                        drawCassette(exonDF,args.scale,args.name,c,args.shape,args.pad,intronDF)
+                    else:
+                        drawCassette(intronDF,args.scale,args.name,c,args.shape,args.pad,exonDF)
+
+
+
 
 if __name__ == '__main__':
     main()
