@@ -261,10 +261,10 @@ def cleanDF(df):
 
 def main():
     name = sys.argv[1]
-    countDF = pd.DataFrame(columns=['genome','THCAS','CBDAS','CBCAS','AAE1','OAC','OLS','PT4'])
+    countDF = pd.DataFrame(columns=['genome','THCAS','CBDAS','CBCAS','AAE1','OAC','OLS','PT4','GPPS_ls','GPPS_ss'])
     countDF.loc[0,'genome']=name
 
-    geneList = ['AAE1','OAC','OLS','PT4']
+    geneList = ['AAE1','OAC','OLS','PT4','GPPS_ls','GPPS_ss']
     for gene in geneList:
         blastfile = name+'.'+gene+'.tblastn.out'
         df = pd.read_csv(blastfile,sep='\t',names=['query','target','identity','length','mismatch','gaps','qstart','qstop','tstart','tstop','eval','bitcore'])
