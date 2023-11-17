@@ -1,6 +1,6 @@
 #!/bin/bash
 
-q_array=( "AAE1.aa.fasta" "OAC.aa.fasta" "PT4.aa.fasta" "OLS.aa.fasta" )
+q_array=( "AAE1.aa.fasta" "OAC.aa.fasta" "PT4.aa.fasta" "OLS.aa.fasta" "GPPS_ls.aa.fasta" "GPPS_ss.aa.fasta" )
 
 FILE=$1
 NAME=${FILE%%.*}
