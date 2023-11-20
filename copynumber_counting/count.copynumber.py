@@ -273,7 +273,7 @@ def main():
         for c in chrs:
             temp = getDIR(df[df['target']==c])
             temp = temp[(temp['identity']>75)]
-            if len(temp)>0:
+            if len(temp)>1:
                 Rtemp, Ctemp = cleanDF(temp)
                 count = count+len(Rtemp)
             elif len(temp)==1:
