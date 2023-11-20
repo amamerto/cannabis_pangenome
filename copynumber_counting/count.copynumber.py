@@ -276,6 +276,8 @@ def main():
             if len(temp)>0:
                 Rtemp, Ctemp = cleanDF(temp)
                 count = count+len(Rtemp)
+            elif len(temp)==1:
+                count = count+len(temp)
         countDF.loc[0,gene]=count
 
     synDF = pd.read_csv(name+'_filterhits.csv')
