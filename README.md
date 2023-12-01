@@ -1,6 +1,6 @@
 # cannabis_pangenome
 ```
-conda create -c conda-forge -c bioconda -c anaconda -n cassettes "python>=3.10" pandas svgwrite blast seaborn bedtools mafft fasttree awscli
+conda create -c conda-forge -c bioconda -c anaconda -n cassettes "python>=3.10" pandas plotnine svgwrite blast seaborn bedtools mafft fasttree awscli
 ```
 
 ### synthase_cassettes
@@ -50,4 +50,26 @@ cat fastas/*.fasta > full_synthases.fasta
 mafft --auto --reorder full_synthases.fasta > full_synthases.aln
 
 FastTree -nt full_synthases.aln > full_synthases.tree
+```
+
+### pandots
+Directory containing files for filtering single chromosomes from paf files and drawing multi-genome dotplots.
+Ouput will be saved as svg.
+
+Plot Autosome
+```
+cd pandots
+
+sh filter_autosomes.sh chr7
+
+python pandots --paf chr7.paf --ref EH23a.chr7 --out chr7
+```
+
+Plot Allosome
+```
+cd pandots
+
+sh filter_autosomes.sh chrY
+
+python pandots --paf chrY.paf --ref AH23b.chrY --out chrY --flip True
 ```
