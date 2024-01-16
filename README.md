@@ -60,16 +60,25 @@ Plot Autosome
 ```
 cd pandots
 
+#Run single chromosome
 sh filter_autosomes.sh chr7
 
-python pandots --paf chr7.paf --ref EH23a.chr7 --out chr7
+python pandots.py --paf chr7.paf --ref EH23a.chr7 --out chr7 --key True --reorder True --recolor True
+
+
+#Or run all chromosome commands
+for i in {1..9}; do
+    sh filter_autosomes.sh chr${i}
+    python pandots.py --paf chr${i}.paf --ref EH23a.chr${i} --out chr${i} --key True --reorder True --recolor True
+done
 ```
 
 Plot Allosome
 ```
 cd pandots
 
-sh filter_autosomes.sh chrY
+sh filter_allosomes.sh
 
-python pandots --paf chrY.paf --ref AH23b.chrY --out chrY --flip True
+python pandots.py --paf chrX.paf --ref AH3Ma.chrX --out chrX --key True --invert True
+python pandots.py --paf chrY.paf --ref AH3Mb.chrY --out chrY --key True --flip True
 ```

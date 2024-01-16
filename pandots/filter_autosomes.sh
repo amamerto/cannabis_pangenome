@@ -14,3 +14,5 @@ done
 rm temp.txt
 
 cat EH23a.*.${chrom}.paf > ${chrom}.paf
+
+rm EH23a.*
