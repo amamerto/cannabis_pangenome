@@ -8,7 +8,7 @@ TYPE=$2
 
 if [ ! -f ${NAME}.softmasked.fasta ]; then
 	aws s3 cp s3://salk-tm-shared/csat/releases/${TYPE}/${NAME}/${FILE} .
-	aws s3 cp s3://salk-tm-dev/allen_temp/synthase_cassettes/csv_output/${NAME}_filterhits.csv .
+	aws s3 cp s3://salk-tm-dev/allen_temp/cannabis/synthase_cassettes/csv_output/${NAME}_filterhits.csv .
 	if [ "${FILE##*.}" = "gz" ]; then
 		echo "##### UNZIPPING FILE"
 		gunzip $FILE
