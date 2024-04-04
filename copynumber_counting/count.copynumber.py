@@ -261,9 +261,9 @@ def cleanDF_old(df):
 
 def cleanDF_new(df):
     largedist = 30000
-    col = ['gene','chr','length','direction','start','stop']
+    col = ['query','target','length','direction','start','stop']
     reducedDF = pd.DataFrame(columns=col)
-    cleanedDF = pd.DataFrame(columns=['gene','chr','ident','length','mismatch','gaps','qstart','qstop','tstart','tstop','eval','bitscore','direction','start','stop','check'])
+    cleanedDF = pd.DataFrame(columns=['query','target','ident','length','mismatch','gaps','qstart','qstop','tstart','tstop','eval','bitscore','direction','start','stop','check'])
     
     ### NEGATIVE ###
     ###
