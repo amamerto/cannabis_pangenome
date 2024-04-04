@@ -268,7 +268,7 @@ def cleanDF_new(df):
     ### NEGATIVE ###
     ###
     neg = df[df['direction'] == '-']
-    if len(neg) > 1 #>= 10:
+    if len(neg) > 1: #>= 10:
         neg = neg.iloc[::-1]
         neg = neg.reset_index(drop=True)
         neg['check'] = ""
@@ -365,7 +365,7 @@ def cleanDF_new(df):
     ### POSITIVE
     ###
     pos = df[df['direction'] == '+']
-    if len(pos) > 1 #>= 10:
+    if len(pos) > 1: #>= 10:
         pos = pos.reset_index(drop=True)
         pos['check'] = ""
         prev_stop = -1000000
