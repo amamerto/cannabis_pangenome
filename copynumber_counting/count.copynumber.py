@@ -61,7 +61,7 @@ def removeDUPES(df):
                     df.drop(index, inplace=True)      
     return(df)
 
-def cleanDF(df):
+def cleanDF_old(df):
     df = removeDUPES(df)
     df = df.sort_values(by=['start'])
     df = df.reset_index(drop=True)
@@ -259,6 +259,215 @@ def cleanDF(df):
     reducedDF = reducedDF.reset_index(drop=True)
     return(reducedDF,cleanedDF)
 
+def cleanDF_new(df):
+    largedist = 30000
+    col = ['gene','chr','length','direction','start','stop']
+    reducedDF = pd.DataFrame(columns=col)
+    cleanedDF = pd.DataFrame(columns=['gene','chr','ident','length','mismatch','gaps','qstart','qstop','tstart','tstop','eval','bitscore','direction','start','stop','check'])
+    
+    ### NEGATIVE ###
+    ###
+    neg = df[df['direction'] == '-']
+    if len(neg) > 1 #>= 10:
+        neg = neg.iloc[::-1]
+        neg = neg.reset_index(drop=True)
+        neg['check'] = ""
+        prev_stop = -1000000
+        position = 5000
+        count = -1
+        check = 0
+
+        for index,row in neg.iterrows():
+            if neg.loc[index, 'qstart'] < position:
+                if count == -1: #start of table
+                    count = 1
+                    temp = pd.DataFrame(columns=col)
+                    temp.loc[count,'gene'] = row['gene']
+                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'stop'] = row['stop']
+                    
+                    position = neg.loc[index, 'qstart']
+                    prev_stop = row['stop']
+                    check = 1
+                    neg.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    # print('START GENE')
+                elif index == len(neg)-1: #new gene end of table
+                    temp.loc[count,'direction'] = '-'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+
+                    check = 1
+                    neg.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    neg = neg.drop([index])
+                    # print('NEW GENE - LAST ROW')
+                else: # new gene
+                    temp.loc[count,'direction'] = '-'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+
+                    temp = pd.DataFrame(columns=col)
+                    count = 1
+                    temp.loc[count,'gene'] = row['gene']
+                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'stop'] = row['stop']
+                    position = neg.loc[index, 'qstart']
+                    prev_stop = row['stop']
+
+                    check = 1
+                    neg.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    # print('NEW GENE')
+            elif abs(row['start']-prev_stop) > largedist: #large gap
+                if index == len(neg)-1: #new gene end of table
+                    temp.loc[count,'direction'] = '-'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+
+                    check = 1
+                    neg.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    neg = neg.drop([index])
+                    # print('NEW GENE - LAST ROW')
+                else: #new gene
+                    temp.loc[count,'direction'] = '-'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+
+                    temp = pd.DataFrame(columns=col)
+                    count += 1
+                    temp.loc[count,'gene'] = row['gene']
+                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'stop'] = row['stop']
+                    position = neg.loc[index, 'qstart']
+                    prev_stop = row['stop']
+
+                    check = 1
+                    neg.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    # print('NEW GENE')
+            else: #next exon
+                temp.loc[count,'start'] = row['start']
+                position = neg.loc[index, 'qstart']
+                prev_stop = row['stop']
+                
+                check += 1
+                neg.loc[index,'check'] = check
+                temp.loc[count,'check'] = check
+                if index == len(neg)-1: #end of table
+                    temp.loc[count,'direction'] = '-'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+                    # print('LAST ROW')
+        cleanedDF = pd.concat([cleanedDF,neg])
+
+    ### POSITIVE
+    ###
+    pos = df[df['direction'] == '+']
+    if len(pos) > 1 #>= 10:
+        pos = pos.reset_index(drop=True)
+        pos['check'] = ""
+        prev_stop = -1000000
+        position = 5000
+        count = -1
+        check = 0
+
+        for index,row in pos.iterrows():
+            if pos.loc[index, 'qstart'] < position:
+                if count == -1: #start of table
+                    count = 1
+                    temp = pd.DataFrame(columns=col)
+                    temp.loc[count,'gene'] = row['gene']
+                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'start'] = row['start']
+                    
+                    position = pos.loc[index, 'qstart']
+                    prev_stop = row['stop']
+                    check = 1
+                    pos.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    # print('START GENE')
+                elif index == len(pos)-1: #new gene end of table
+                    temp.loc[count,'direction'] = '+'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+                    
+                    check = 1
+                    pos.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    pos = pos.drop([index])
+                    # print('NEW GENE - LAST ROW')
+                else: # new gene
+                    temp.loc[count,'direction'] = '+'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+
+                    temp = pd.DataFrame(columns=col)
+                    count = 1
+                    temp.loc[count,'gene'] = row['gene']
+                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'start'] = row['start']
+                    position = pos.loc[index, 'qstart']
+                    prev_stop = row['stop']
+
+                    check = 1
+                    pos.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    # print('NEW GENE')
+            elif row['start']-prev_stop > largedist: #large gap
+                if index == len(pos)-1: #new gene end of table
+                    temp.loc[count,'direction'] = '+'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+
+                    check = 1
+                    pos.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    pos = pos.drop([index])
+                    # print('NEW GENE - LAST ROW')
+                else: #new gene
+                    temp.loc[count,'direction'] = '+'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+                    
+                    temp = pd.DataFrame(columns=col)
+                    count +=1
+                    temp.loc[count,'gene'] = row['gene']
+                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'start'] = row['start']
+                    position = pos.loc[index, 'qstart']
+                    prev_stop = row['stop']
+
+                    check = 1
+                    pos.loc[index,'check'] = check
+                    temp.loc[count,'check'] = check
+                    # print('NEW GENE')
+            else: #next exon
+                temp.loc[count,'stop'] = row['stop']
+                position = pos.loc[index, 'qstart']
+                prev_stop = row['stop']
+                
+                check += 1
+                pos.loc[index,'check'] = check
+                temp.loc[count,'check'] = check
+                if index == len(pos)-1: #end of table
+                    temp.loc[count,'direction'] = '+'
+                    temp.loc[count,'length'] = temp.loc[count,'stop'] - temp.loc[count,'start']
+                    reducedDF = pd.concat([reducedDF,temp])
+                    # print('LAST ROW')
+        cleanedDF = pd.concat([cleanedDF,pos])
+    
+    ### CLEANUP
+    ###
+    reducedDF = reducedDF[reducedDF['check'] > 4]
+    cleanedDF = cleanedDF[(cleanedDF['start'] >= reducedDF['start'].min()) & (cleanedDF['stop'] <= reducedDF['stop'].max())]
+    cleanedDF = cleanedDF.sort_values(by=['start'])
+    cleanedDF = cleanedDF.reset_index(drop=True)
+    reducedDF = reducedDF.sort_values(by=['start'])
+    reducedDF = reducedDF.reset_index(drop=True)
+    return(reducedDF,cleanedDF)
+
 def main():
     name = sys.argv[1]
     countDF = pd.DataFrame(columns=['genome','THCAS','CBDAS','CBCAS','AAE1','OAC','OLS','PT4','GPPS_ls','GPPS_ss','BKR','ALT4'])
@@ -274,7 +483,7 @@ def main():
             temp = getDIR(df[df['target']==c])
             temp = temp[(temp['identity']>75)]
             if len(temp)>1:
-                Rtemp, Ctemp = cleanDF(temp)
+                Rtemp, Ctemp = cleanDF_new(temp)
                 count = count+len(Rtemp)
             elif len(temp)==1:
                 count = count+len(temp)
@@ -289,7 +498,7 @@ def main():
         for c in chrs:
             temp = getDIR(df[(df['target'] == c) & (df['mismatch'] <= 10)])
             if len(temp) >= 10:
-                Rtemp, Ctemp = cleanDF(temp)
+                Rtemp, Ctemp = cleanDF_new(temp)
                 count = count+len(Rtemp)
             elif len(temp)==1:
                 count = count+len(temp)
