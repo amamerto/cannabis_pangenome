@@ -282,8 +282,8 @@ def cleanDF_new(df):
                 if count == -1: #start of table
                     count = 1
                     temp = pd.DataFrame(columns=col)
-                    temp.loc[count,'gene'] = row['gene']
-                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'query'] = row['query']
+                    temp.loc[count,'target'] = row['target']
                     temp.loc[count,'stop'] = row['stop']
                     
                     position = neg.loc[index, 'qstart']
@@ -309,8 +309,8 @@ def cleanDF_new(df):
 
                     temp = pd.DataFrame(columns=col)
                     count = 1
-                    temp.loc[count,'gene'] = row['gene']
-                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'query'] = row['query']
+                    temp.loc[count,'target'] = row['target']
                     temp.loc[count,'stop'] = row['stop']
                     position = neg.loc[index, 'qstart']
                     prev_stop = row['stop']
@@ -337,8 +337,8 @@ def cleanDF_new(df):
 
                     temp = pd.DataFrame(columns=col)
                     count += 1
-                    temp.loc[count,'gene'] = row['gene']
-                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'query'] = row['query']
+                    temp.loc[count,'target'] = row['target']
                     temp.loc[count,'stop'] = row['stop']
                     position = neg.loc[index, 'qstart']
                     prev_stop = row['stop']
@@ -378,8 +378,8 @@ def cleanDF_new(df):
                 if count == -1: #start of table
                     count = 1
                     temp = pd.DataFrame(columns=col)
-                    temp.loc[count,'gene'] = row['gene']
-                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'query'] = row['query']
+                    temp.loc[count,'target'] = row['target']
                     temp.loc[count,'start'] = row['start']
                     
                     position = pos.loc[index, 'qstart']
@@ -405,8 +405,8 @@ def cleanDF_new(df):
 
                     temp = pd.DataFrame(columns=col)
                     count = 1
-                    temp.loc[count,'gene'] = row['gene']
-                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'query'] = row['query']
+                    temp.loc[count,'target'] = row['target']
                     temp.loc[count,'start'] = row['start']
                     position = pos.loc[index, 'qstart']
                     prev_stop = row['stop']
@@ -433,8 +433,8 @@ def cleanDF_new(df):
                     
                     temp = pd.DataFrame(columns=col)
                     count +=1
-                    temp.loc[count,'gene'] = row['gene']
-                    temp.loc[count,'chr'] = row['chr']
+                    temp.loc[count,'query'] = row['query']
+                    temp.loc[count,'target'] = row['target']
                     temp.loc[count,'start'] = row['start']
                     position = pos.loc[index, 'qstart']
                     prev_stop = row['stop']
