@@ -1,6 +1,6 @@
 #!/bin/bash
 
-q_array=( "AAE1.aa.fasta" "OAC.aa.fasta" "PT4.aa.fasta" "OLS.aa.fasta" "GPPS_ls.aa.fasta" "GPPS_ss.aa.fasta" )
+q_array=( "AAE1.aa.fasta" "OAC.aa.fasta" "PT4.aa.fasta" "OLS.aa.fasta" "GPPS_ls.aa.fasta" "GPPS_ss.aa.fasta" "BKR.cds.fasta" "ALT4.cds.fasta" )
 
 FILE=$1
 NAME=${FILE%%.*}
@@ -23,7 +23,11 @@ makeblastdb -in ${FILE} -dbtype nucl
 for QFILE in "${q_array[@]}"
 do
 	QUERY=${QFILE%%.*}
-	tblastn -query ${QFILE} -db ${FILE} -out ${NAME}.${QUERY}.tblastn.out -outfmt 6
+	if [[ "${QFILE}" == *'aa'* ]]; then
+		tblastn -query ${QFILE} -db ${FILE} -out ${NAME}.${QUERY}.tblastn.out -outfmt 6
+	elif [[ "${QFILE}" == *'cds'* ]]; then
+		blastn -query ${QFILE} -db ${FILE} -out ${NAME}.${QUERY}.blastn.out -outfmt 6
+	fi
 done
 
 python count.copynumber.py ${NAME}

@@ -261,7 +261,7 @@ def cleanDF(df):
 
 def main():
     name = sys.argv[1]
-    countDF = pd.DataFrame(columns=['genome','THCAS','CBDAS','CBCAS','AAE1','OAC','OLS','PT4','GPPS_ls','GPPS_ss'])
+    countDF = pd.DataFrame(columns=['genome','THCAS','CBDAS','CBCAS','AAE1','OAC','OLS','PT4','GPPS_ls','GPPS_ss','BKR','ALT4'])
     countDF.loc[0,'genome']=name
 
     geneList = ['AAE1','OAC','OLS','PT4','GPPS_ls','GPPS_ss']
@@ -274,6 +274,21 @@ def main():
             temp = getDIR(df[df['target']==c])
             temp = temp[(temp['identity']>75)]
             if len(temp)>1:
+                Rtemp, Ctemp = cleanDF(temp)
+                count = count+len(Rtemp)
+            elif len(temp)==1:
+                count = count+len(temp)
+        countDF.loc[0,gene]=count
+
+    geneList = ['BKR','ALT4']
+    for gene in geneList:
+        blastfile = name+'.'+gene+'.blastn.out'
+        df = pd.read_csv(blastfile,sep='\t',names=['query','target','identity','length','mismatch','gaps','qstart','qstop','tstart','tstop','eval','bitcore'])
+        chrs = list(df['target'].unique())
+        count = 0
+        for c in chrs:
+            temp = getDIR(df[(df['target'] == c) & (df['mismatch'] <= 10)])
+            if len(temp) >= 10:
                 Rtemp, Ctemp = cleanDF(temp)
                 count = count+len(Rtemp)
             elif len(temp)==1:
